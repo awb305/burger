@@ -6,7 +6,7 @@
     </div>
     <h3>Eat-Da-Burger!</h3>
     <div class="row" id="burger-section">
-  
+
     </div>
     <div class="row">
         <div class="col">
@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <textarea class="form-control" id="burger-name" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary"  id="submit">Submit</button>
+                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
                 <h6>Enter a burger you want to eat. Click the "Submit" button.</h6>
             </form>
         </div>
@@ -25,54 +25,54 @@
 
 
 
-    function createList(i, burgers, section){
+    function createList(i, burgers, section) {
         console.log("!!");
 
         console.log(i);
 
-        //$("#burger-section").empty;
+       
 
 
 
-         //creates the bootstrap outline for the middle part
-            let row = $("<div>");
-            row.addClass("row row" +i);
-            let col1 = $("<div>");
-            col1.addClass("col-sm-4");
-            col1.attr("id", "burger-item" + i);
-            let col2 = $("<div>");
-            col2.addClass("col-sm-4");
-            col2.attr("id", "button-item" + i);
-            let col3 = $("<div>");
-            col3.addClass("col-sm-4");
-            col3.attr("id", "devoured-item" + i);
-            row.append(col1, col2, col3);
-            section.append(row);
+        //creates the bootstrap outline for the middle part
+        let row = $("<div>");
+        row.addClass("row row" + i);
+        let col1 = $("<div>");
+        col1.addClass("col-sm-4");
+        col1.attr("id", "burger-item" + i);
+        let col2 = $("<div>");
+        col2.addClass("col-sm-4");
+        col2.attr("id", "button-item" + i);
+        let col3 = $("<div>");
+        col3.addClass("col-sm-4");
+        col3.attr("id", "devoured-item" + i);
+        row.append(col1, col2, col3);
+        section.append(row);
 
-            // uses the database response to create the individual items 
-            let item = $("<p>");   
-            item.attr("id", "burger-number" + burgers[i].id);
-            item.text(burgers[i].burger_name);
-            $("#burger-item"+ i).append(item);
+        // uses the database response to create the individual items 
+        let item = $("<p>");
+        item.attr("id", "burger-number" + burgers[i].id);
+        item.text(burgers[i].burger_name);
+        $("#burger-item" + i).append(item);
 
-            
-            let button = $("<button>");
-            button.addClass("btn btn-primary");
-            button.text("Devour it!");
-            $("#button-item" + i).append(button);
-           
 
-            //the final items are not displaying 
-            let devouredItem = $("<p>");
-            devouredItem.addClass("devoured");
-            devouredItem.attr("id", "devoured-item" + burgers[i].id);
-            devouredItem.text(burgers[i].burger_name);
+        let button = $("<button>");
+        button.addClass("btn btn-primary");
+        button.text("Devour it!");
+        $("#button-item" + i).append(button);
 
-            console.log(burgers[i].burger_name);
+
+        //the final items are not displaying 
+        let devouredItem = $("<p>");
+        devouredItem.addClass("devoured");
+        devouredItem.attr("id", "devoured-item" + burgers[i].id);
+        devouredItem.text(burgers[i].burger_name);
+
+        console.log(burgers[i].burger_name);
 
     }
 
-    function retrieveBurgers(){
+    function retrieveBurgers() {
 
         console.log("!");
 
@@ -90,8 +90,8 @@
 
             for (let i = 0; i < burgers.length; i++) {
                 console.log("1-" + i);
-                createList(i, burgers, section);     
-             }
+                createList(i, burgers, section);
+            }
         });
     }
 
@@ -101,30 +101,32 @@
         retrieveBurgers();
 
 
-            $("#submit").on("click", function (event) {
-                event.preventDefault();
+        $("#submit").on("click", function (event) {
+            event.preventDefault();
 
-                let name = $("#burger-name").val();
+            let name = $("#burger-name").val();
 
-                console.log("name", name);
-
-                // Send the PUT request.
-                $.ajax({
-                    method: "POST",
-                    url: "/api/burgers/" + name
-                }).then(function(){
-                    
-                        console.log("added burger: " + name);
-                        retrieveBurgers();
-
-                        console.log("post called");
-
-                    
+            console.log("name", name);
 
 
 
-                });
-                 });
+           
+
+            // Send the PUT request.
+            $.ajax({
+                method: "POST",
+                url: "/api/burgers/" + name,
+                success: function (resp) {
+                    console.log(resp);
+                     $("#burger-section").empty();
+                    retrieveBurgers();
+                },
+                error: function (req, status, err) {
+                    console.log('something went wrong', status, err);
+                }
+
+            });
+        });
 
     });
 </script>

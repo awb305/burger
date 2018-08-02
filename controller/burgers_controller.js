@@ -32,6 +32,7 @@ router.post("/api/burgers/:name", function(req, res) {
    // res.json({ id: result.insertId });
    console.log(result);
   });
+  res.status(200).end();
 });
 
 router.put("/api/burgers/:new/:old", function(req, res) {
