@@ -1,12 +1,21 @@
 <div class="container">
     <div class="row">
+        <div class="column">
+            <img src="/assets/img/burger.jpg" alt="burger">
+        </div>
+    </div>
+    <h3>Eat-Da-Burger!</h3>
+    <div class="row" id="burger-section">
+  
+    </div>
+    <div class="row">
         <div class="col">
             <form>
                 <div class="form-group">
                     <textarea class="form-control" id="burger-name" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <h6>Enter a burger you want to eat. clikc the "Submit" button.</h6>
+                <button type="submit" class="btn btn-primary"  id="submit">Submit</button>
+                <h6>Enter a burger you want to eat. Click the "Submit" button.</h6>
             </form>
         </div>
     </div>
@@ -14,10 +23,85 @@
 
 <script>
 
+
+
+    function createList(i, burgers, section){
+        console.log("!!");
+
+        console.log(i);
+
+        //$("#burger-section").empty;
+
+
+
+         //creates the bootstrap outline for the middle part
+            let row = $("<div>");
+            row.addClass("row row" +i);
+            let col1 = $("<div>");
+            col1.addClass("col-sm-4");
+            col1.attr("id", "burger-item" + i);
+            let col2 = $("<div>");
+            col2.addClass("col-sm-4");
+            col2.attr("id", "button-item" + i);
+            let col3 = $("<div>");
+            col3.addClass("col-sm-4");
+            col3.attr("id", "devoured-item" + i);
+            row.append(col1, col2, col3);
+            section.append(row);
+
+            // uses the database response to create the individual items 
+            let item = $("<p>");   
+            item.attr("id", "burger-number" + burgers[i].id);
+            item.text(burgers[i].burger_name);
+            $("#burger-item"+ i).append(item);
+
+            
+            let button = $("<button>");
+            button.addClass("btn btn-primary");
+            button.text("Devour it!");
+            $("#button-item" + i).append(button);
+           
+
+            //the final items are not displaying 
+            let devouredItem = $("<p>");
+            devouredItem.addClass("devoured");
+            devouredItem.attr("id", "devoured-item" + burgers[i].id);
+            devouredItem.text(burgers[i].burger_name);
+
+            console.log(burgers[i].burger_name);
+
+    }
+
+    function retrieveBurgers(){
+
+        console.log("!");
+
+        $.ajax({
+            type: "GET",
+            url: "/api/burgers"
+        }).then(function (res) {
+            console.log(res.burger[0].burger_name);
+
+            let burgers = res.burger;
+
+
+            let section = $("#burger-section");
+
+
+            for (let i = 0; i < burgers.length; i++) {
+                console.log("1-" + i);
+                createList(i, burgers, section);     
+             }
+        });
+    }
+
     $(document).ready(function () {
         // Make sure we wait to attach our handlers until the DOM is fully loaded.
-        $(function () {
-            $(".btn").on("click", function (event) {
+
+        retrieveBurgers();
+
+
+            $("#submit").on("click", function (event) {
                 event.preventDefault();
 
                 let name = $("#burger-name").val();
@@ -26,60 +110,21 @@
 
                 // Send the PUT request.
                 $.ajax({
-                    type: "POST",
+                    method: "POST",
                     url: "/api/burgers/" + name
-                }).then(
-                    function () {
-                        console.log("added burger: " + name);;
-                        // Reload the page to get the updated list
-                    }
-                );
-            });
+                }).then(function(){
+                    
+                        console.log("added burger: " + name);
+                        retrieveBurgers();
 
-            $(".create-form").on("submit", function (event) {
-                // Make sure to preventDefault on a submit event.
-                event.preventDefault();
+                        console.log("post called");
 
-                var newCat = {
-                    name: $("#ca").val().trim(),
-                    sleepy: $("[name=sleepy]:checked").val().trim()
-                };
-
-                // Send the POST request.
-                $.ajax("/api/cats", {
-                    type: "POST",
-                    data: newCat
-                }).then(
-                    function () {
-                        console.log("created new cat");
-                        // Reload the page to get the updated list
-                        location.reload();
-                    }
-                );
-            });
-
-            $(".delete-cat").on("click", function (event) {
-                var id = $(this).data("id");
-
-                // Send the DELETE request.
-                $.ajax("/api/cats/" + id, {
-                    type: "DELETE"
-                }).then(
-                    function () {
-                        console.log("deleted cat", id);
-                        // Reload the page to get the updated list
-                        location.reload();
-                    }
-                );
-            });
-        });
+                    
 
 
 
+                });
+                 });
 
-
-
-    })
-
-
+    });
 </script>
