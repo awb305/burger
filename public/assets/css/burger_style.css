@@ -2,3 +2,7 @@
     background-color: green;
     margin: 2 rem;
 }
+
+.devoured {
+    display: none;
+}
