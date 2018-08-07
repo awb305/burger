@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="column">
+        <div class="col">
             <img src="/assets/img/burger.jpg" alt="burger">
         </div>
     </div>
@@ -123,13 +123,13 @@
             $("#devoured-item" + rowNum).text(burgerText);
 
 
+
+
             console.log("rowNum", rowNum);
             console.log("this", target);
+
             //grabs the id for database
             let dataId = $("#burger-number" + rowNum).attr("data-id");
-
-            console.log('dataId', dataId);
-
             let url = "/api/burgers/" + dataId;
 
             $.ajax({
@@ -143,6 +143,10 @@
                 }
             })
             
+
+            //cleans page up
+            $("#burger-number" + rowNum).remove();
+            $("#btn-"+ rowNum).remove();
 
         });
 
